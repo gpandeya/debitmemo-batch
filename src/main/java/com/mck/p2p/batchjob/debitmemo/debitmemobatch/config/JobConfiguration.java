@@ -36,10 +36,13 @@ public class JobConfiguration {
 	@Bean
 	public FlatFileItemReader<DebitMemo> debitMemoItemReader(){
 		
-		String filePath = "\\data\\debitmemo.csv"; 
+		//String filePath = "\\data\\debitmemo.csv"; 
+		//String filePath=" file://debitmemo.csv";
 		FlatFileItemReader<DebitMemo> reader = new FlatFileItemReader<DebitMemo>();
 		reader.setLinesToSkip(1);
-		reader.setResource(new FileSystemResource(filePath));
+		
+		//reader.setResource(new FileSystemResource(filePath));
+		reader.setResource(new ClassPathResource("../data/debitmemo.csv", JobConfiguration.class));
 		
 		DefaultLineMapper<DebitMemo> lineMapper = new DefaultLineMapper<DebitMemo>();
 		

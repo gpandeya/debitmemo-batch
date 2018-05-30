@@ -1,21 +1,21 @@
-id	description	supplier
-101	debit memo 101	walmart
-102	debit memo 102	walmart
-103	debit memo 103	walmart
-104	debit memo 104	walmart
-105	debit memo 105	walmart
-106	debit memo 106	walmart
-107	debit memo 107	walmart
-108	debit memo 108	walmart
-109	debit memo 109	walmart
-110	debit memo 110	walmart
-111	debit memo 111	walmart
-112	debit memo 112	walmart
-113	debit memo 113	walmart
-114	debit memo 114	walmart
-115	debit memo 115	walmart
-116	debit memo 116	walmart
-117	debit memo 117	walmart
-118	debit memo 118	walmart
-119	debit memo 119	walmart
-120	debit memo 120	walmart
+id,description,supplier
+101,debit memo 101,Costco
+102,debit memo 102,Costco
+103,debit memo 103,Costco
+104,debit memo 104,Costco
+105,debit memo 105,Costco
+106,debit memo 106,Costco
+107,debit memo 107,Costco
+108,debit memo 108,Costco
+109,debit memo 109,Costco
+110,debit memo 110,Costco
+111,debit memo 111,Costco
+112,debit memo 112,Costco
+113,debit memo 113,Costco
+114,debit memo 114,Costco
+115,debit memo 115,Costco
+116,debit memo 116,Costco
+117,debit memo 117,Costco
+118,debit memo 118,Costco
+119,debit memo 119,Costco
+120,debit memo 120,Costco

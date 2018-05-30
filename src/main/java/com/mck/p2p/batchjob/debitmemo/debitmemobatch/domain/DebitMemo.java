@@ -45,8 +45,7 @@ public class DebitMemo {
 	@Override
 	public String toString() {
 		return "DebitMemo [id=" + id + ", "
-				+ "description=" + description + ", "
-						+ "supplier=" + supplier + "]";
+				+ "description=" + description + ", supplier=" + supplier + "]";
 	}
 	
 }
