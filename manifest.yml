@@ -1,0 +1,4 @@
+applications:
+- name: DebitMemoBatchApp
+path: target/debitmemo-batch-0.0.1-SNAPSHOT.jar
+buildpack: https://github.com/cloudfoundry/java-buildpack.git
