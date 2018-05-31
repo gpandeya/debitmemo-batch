@@ -33,7 +33,9 @@ public class JobConfiguration {
 	@Autowired
 	private StepBuilderFactory stepFactory;
 	
-	@Bean
+	/*
+	 * 05.31.2018 : replace with CSVFileItemReader
+	 * @Bean
 	public FlatFileItemReader<DebitMemo> debitMemoItemReader(){
 		
 		//String filePath = "\\data\\debitmemo.csv"; 
@@ -56,27 +58,38 @@ public class JobConfiguration {
 		reader.setLineMapper(lineMapper);
 		
 		return reader;
-	}
+	}*/
 	
-	@Bean
+	/*@Bean
+	 * 05.31.2018 : replaced with SysoutItemWriter
 	public ItemWriter<DebitMemo> debitMemoitemWriter(){
-		/*ItemWriter<DebitMemo> itemWriter=null;
+		ItemWriter<DebitMemo> itemWriter=null;
 		for(DebitMemo debitMemo : itemWriter){
 			
-		}*/
+		}
 		
 		return items ->{
 			for(DebitMemo debitMemo : items)
 				System.out.println(debitMemo.toString());
 		};
+	}*/
+	
+	@Bean
+	public FlatFileItemReader<DebitMemo> itemReader(){
+		return new CSVFileItemReader().itemReader();
+	}
+	
+	@Bean
+	public SysOutItemWriter itemWriter(){
+		return new SysOutItemWriter();
 	}
 	
 	@Bean
 	public Step step1(){
 		return stepFactory.get("step1")
-				.<DebitMemo,DebitMemo>chunk(2)
-				.reader(debitMemoItemReader())
-				.writer(debitMemoitemWriter()).build();
+				.<DebitMemo,DebitMemo>chunk(10)
+				.reader(itemReader())
+				.writer(itemWriter()).build();
 			
 	}
 	

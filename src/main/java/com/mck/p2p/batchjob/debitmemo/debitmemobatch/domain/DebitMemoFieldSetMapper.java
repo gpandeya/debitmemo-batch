@@ -4,10 +4,10 @@ import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;
 
-public class DebitMemoFieldSetMapper implements FieldSetMapper{
+public class DebitMemoFieldSetMapper implements FieldSetMapper<DebitMemo>{
 
 	@Override
-	public Object mapFieldSet(FieldSet fieldSet) throws BindException {
+	public DebitMemo mapFieldSet(FieldSet fieldSet) throws BindException {
 		
 		return new DebitMemo(fieldSet.readString("id"),
 				fieldSet.readString("description"),
