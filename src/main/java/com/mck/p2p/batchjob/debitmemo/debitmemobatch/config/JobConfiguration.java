@@ -9,6 +9,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -22,6 +23,7 @@ import org.springframework.core.io.FileSystemResource;
 
 import com.mck.p2p.batchjob.debitmemo.debitmemobatch.domain.DebitMemo;
 import com.mck.p2p.batchjob.debitmemo.debitmemobatch.domain.DebitMemoFieldSetMapper;
+import com.mck.p2p.batchjob.debitmemo.debitmemobatch.processor.UpperCaseSupplierProcessor;
 
 @Configuration
 
@@ -85,10 +87,15 @@ public class JobConfiguration {
 	}
 	
 	@Bean
+	public ItemProcessor<DebitMemo,DebitMemo> itemProcessor(){
+		return new UpperCaseSupplierProcessor();
+	}
+	@Bean
 	public Step step1(){
 		return stepFactory.get("step1")
 				.<DebitMemo,DebitMemo>chunk(10)
 				.reader(itemReader())
+				.processor(itemProcessor())
 				.writer(itemWriter()).build();
 			
 	}
