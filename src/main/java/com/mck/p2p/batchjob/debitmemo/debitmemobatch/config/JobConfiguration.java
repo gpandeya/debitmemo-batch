@@ -1,5 +1,8 @@
 package com.mck.p2p.batchjob.debitmemo.debitmemobatch.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -14,6 +17,8 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.support.CompositeItemProcessor;
+import org.springframework.batch.item.validator.ValidatingItemProcessor;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +29,7 @@ import org.springframework.core.io.FileSystemResource;
 import com.mck.p2p.batchjob.debitmemo.debitmemobatch.domain.DebitMemo;
 import com.mck.p2p.batchjob.debitmemo.debitmemobatch.domain.DebitMemoFieldSetMapper;
 import com.mck.p2p.batchjob.debitmemo.debitmemobatch.processor.UpperCaseSupplierProcessor;
+import com.mck.p2p.batchjob.debitmemo.debitmemobatch.validator.DebitMemoValidator;
 
 @Configuration
 
@@ -86,22 +92,45 @@ public class JobConfiguration {
 		return new SysOutItemWriter();
 	}
 	
-	@Bean
+	/* added compositeItemProcessor below
+	 * @Bean
 	public ItemProcessor<DebitMemo,DebitMemo> itemProcessor(){
 		return new UpperCaseSupplierProcessor();
+	}*/
+	@Bean
+	public CompositeItemProcessor<DebitMemo,DebitMemo> compositeProcessor() throws Exception{
+		List<ItemProcessor<DebitMemo, DebitMemo>> delegates = new ArrayList();
+		delegates.add(validatorProcessor());
+		delegates.add(new UpperCaseSupplierProcessor());
+		
+		CompositeItemProcessor<DebitMemo,DebitMemo> compositeProcessor= new CompositeItemProcessor<DebitMemo,DebitMemo>();
+		compositeProcessor.setDelegates(delegates);
+		compositeProcessor.afterPropertiesSet();
+		
+		return compositeProcessor;
 	}
 	@Bean
-	public Step step1(){
+	public ValidatingItemProcessor<DebitMemo> validatorProcessor(){
+		ValidatingItemProcessor<DebitMemo> validatorProcessor=
+				new ValidatingItemProcessor<DebitMemo>(new DebitMemoValidator());
+		validatorProcessor.setFilter(true);
+		
+		return validatorProcessor;
+	}
+	
+	@Bean
+	public Step step1() throws Exception{
 		return stepFactory.get("step1")
-				.<DebitMemo,DebitMemo>chunk(10)
+				.<DebitMemo,DebitMemo>chunk(50)
 				.reader(itemReader())
-				.processor(itemProcessor())
+				.processor(compositeProcessor())
+				//.processor(itemProcessor())
 				.writer(itemWriter()).build();
 			
 	}
 	
 	@Bean
-	public Job debitMemoBatchJob(){
+	public Job debitMemoBatchJob() throws Exception{
 		return jobFactory.get("debit-memo-batch").start(step1()).build();
 	}
 	
